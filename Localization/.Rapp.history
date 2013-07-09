@@ -1,0 +1,214 @@
+Simulating Simple Movement Model#
+###############################################################################				#
+##	Bryant Dossman July 5, 2012#
+##	First attempt. Creating a simple fixed velocity and turning angle model...i.e straight line movement#
+##	NOTE: To convert from slope(m) to angle (theta)----> theta = arctan(m)#
+############################################################################################################
+##	A discrete velocity based movement model -----> S(t+1) = S(t) + y #
+## 		where S(t) = {X(t),Y(t)), and y is the velocity vector that contains X and Y coordinates that #
+##		describe the speed and direction of movement#
+############################################################################################################
+## Parameters (fixed)#
+theta = pi/4 # in radians#
+V = 2 # arbitrary units of velocity. use this to create velocity vector#
+m = tan(theta) # converting desired fixed turning angle into slope to impute velocity vector#
+velocity <- c(#
+## Initial Conditions#
+S0 <- c(5,5) # intital location#
+t_steps=1000 # number of timesteps to simulate#
+## Create a matrix of locations (S)and create a velocity Vector#
+S <- matrix(NA, nrow=t_steps, ncol=2)#
+S[1,] <- S0#
+y <- matrix(velocity, nrow=1, ncol=2)#
+## Simulate the location data#
+for (i in 1:(t_steps-1)){#
+	S[i+1,] = S[i,] + y#
+}
+Parameters (fixed)#
+theta = pi/4 # in radians#
+V = 2 # arbitrary units of velocity. use this to create velocity vector#
+m = tan(theta) # converting desired fixed turning angle into slope to impute velocity vector#
+velocity <- c(#
+## Initial Conditions#
+S0 <- c(5,5) # intital location#
+t_steps=1000 # number of timesteps to simulate#
+## Create a matrix of locations (S)and create a velocity Vector#
+S <- matrix(NA, nrow=t_steps, ncol=2)#
+S[1,] <- S0#
+y <- matrix(velocity, nrow=1, ncol=2)#
+## Simulate the location data#
+for (i in 1:(t_steps-1)){#
+	S[i+1,] = S[i,] + y#
+}
+Parameters (fixed)#
+theta = pi/4 # in radians#
+V = 2 # arbitrary units of velocity. use this to create velocity vector#
+m = tan(theta) # converting desired fixed turning angle into slope to impute velocity vector#
+velocity <- c(#
+## Initial Conditions#
+S0 <- c(5,5) # intital location#
+t_steps=1000 # number of timesteps to simulate#
+## Create a matrix of locations (S)and create a velocity Vector#
+S <- matrix(NA, nrow=t_steps, ncol=2)#
+S[1,] <- S0#
+y <- matrix(velocity, nrow=1, ncol=2)#
+## Simulate the location data#
+for (i in 1:(t_steps-1)){#
+	S[i+1,] = S[i,] + y#
+}
+Parameters (fixed)#
+theta = pi/4 # in radians#
+V = 2 # arbitrary units of velocity. use this to create velocity vector#
+m = tan(theta) # converting desired fixed turning angle into slope to impute velocity vector#
+velocity <- c(#
+## Initial Conditions#
+S0 <- c(5,5) # intital location#
+t_steps=1000 # number of timesteps to simulate#
+## Create a matrix of locations (S)and create a velocity Vector#
+S <- matrix(NA, nrow=t_steps, ncol=2)#
+S[1,] <- S0#
+y <- matrix(velocity, nrow=1, ncol=2)#
+## Simulate the location data#
+for (i in 1:(t_steps-1)){#
+	S[i+1,] = S[i,] + y#
+}
+ddsf
+Parameters (fixed)#
+theta = pi/4 # in radians#
+V = 2 # arbitrary units of velocity. use this to create velocity vector#
+m = tan(theta) # converting desired fixed turning angle into slope to impute velocity vector#
+velocity <- c(#
+## Initial Conditions#
+S0 <- c(5,5) # intital location#
+t_steps=1000 # number of timesteps to simulate#
+## Create a matrix of locations (S)and create a velocity Vector#
+S <- matrix(NA, nrow=t_steps, ncol=2)#
+S[1,] <- S0#
+y <- matrix(velocity, nrow=1, ncol=2)#
+## Simulate the location data#
+for (i in 1:(t_steps-1)){#
+	S[i+1,] = S[i,] + y#
+}
+S0 <- c(5,5) # intital location
+t_steps=1000 # number of timesteps to simulate
+S <- matrix(NA, nrow=t_steps, ncol=2)
+S[1,] <- S0
+y <- matrix(velocity, nrow=1, ncol=2)
+for (i in 1:(t_steps-1)){#
+	S[i+1,] = S[i,] + y#
+}
+S <- matrix(NA, nrow=t_steps, ncol=2)
+S[1,] <- S0
+y <- matrix(velocity, nrow=1, ncol=2)
+for (i in 1:(t_steps-1)){
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)''
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+??polar plot
+??polarplot
+??polar.plot
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+testlen<-c(rnorm(36)*2+5)#
+ testpos<-seq(0,350,by=10)#
+ polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
+ polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
+  start=90,clockwise=TRUE,lwd=3,line.col=4)
+rinit <- c(0,0)	# inital position#
+h <- 1				# timestep#
+n <- 1000			# number of locations#
+## fixed parameters#
+#
+r <- 10			# magnitude of movement (velocity)#
+theta <- pi/4	# equal to 45 degree angle#
+#
+## simulating movement path#
+#
+S <- matrix(0,nrow=n,ncol=2)#
+S[1,] <- rinit#
+#
+for (i in 1:n){#
+	S[t+1,] <- S[t,] + c(r*cos(theta), r*sin(theta))#
+}
+for (i in (1:n-1)){#
+	S[t+1,] <- S[t,] + c(r*cos(theta), r*sin(theta))#
+}
+for (i in (1:n-1)){#
+	S[i+1,] <- S[i,] + c(r*cos(theta), r*sin(theta))#
+}
+rinit <- c(0,0)	# inital position#
+h <- 1				# timestep#
+n <- 1000			# number of locations#
+## fixed parameters#
+#
+r <- 10			# magnitude of movement (velocity)#
+theta <- pi/4	# equal to 45 degree angle#
+#
+## simulating movement path#
+#
+S <- matrix(0,nrow=n,ncol=2)#
+S[1,] <- rinit
+for (i in (1:n-1)){#
+	S[i+1,] <- S[i,] + c(r*cos(theta), r*sin(theta))#
+}
+S[1,]
+S[1,]+c(1,1)
+for (i in 1:(n-1)){#
+	S[i+1,] <- S[i,] + c(r*cos(theta), r*sin(theta))#
+}
+plot(S[,1],S[,2])
