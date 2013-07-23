@@ -40,38 +40,6 @@ y <- matrix(velocity, nrow=1, ncol=2)#
 for (i in 1:(t_steps-1)){#
 	S[i+1,] = S[i,] + y#
 }
-Parameters (fixed)#
-theta = pi/4 # in radians#
-V = 2 # arbitrary units of velocity. use this to create velocity vector#
-m = tan(theta) # converting desired fixed turning angle into slope to impute velocity vector#
-velocity <- c(#
-## Initial Conditions#
-S0 <- c(5,5) # intital location#
-t_steps=1000 # number of timesteps to simulate#
-## Create a matrix of locations (S)and create a velocity Vector#
-S <- matrix(NA, nrow=t_steps, ncol=2)#
-S[1,] <- S0#
-y <- matrix(velocity, nrow=1, ncol=2)#
-## Simulate the location data#
-for (i in 1:(t_steps-1)){#
-	S[i+1,] = S[i,] + y#
-}
-Parameters (fixed)#
-theta = pi/4 # in radians#
-V = 2 # arbitrary units of velocity. use this to create velocity vector#
-m = tan(theta) # converting desired fixed turning angle into slope to impute velocity vector#
-velocity <- c(#
-## Initial Conditions#
-S0 <- c(5,5) # intital location#
-t_steps=1000 # number of timesteps to simulate#
-## Create a matrix of locations (S)and create a velocity Vector#
-S <- matrix(NA, nrow=t_steps, ncol=2)#
-S[1,] <- S0#
-y <- matrix(velocity, nrow=1, ncol=2)#
-## Simulate the location data#
-for (i in 1:(t_steps-1)){#
-	S[i+1,] = S[i,] + y#
-}
 ddsf
 Parameters (fixed)#
 theta = pi/4 # in radians#
@@ -111,59 +79,9 @@ testlen<-c(rnorm(36)*2+5)#
  polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
  polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
   start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
 ??polar plot
 ??polarplot
 ??polar.plot
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
-testlen<-c(rnorm(36)*2+5)#
- testpos<-seq(0,350,by=10)#
- polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#
- polar.plot(testlen,testpos,main="Test Clockwise Polar Plot",#
-  start=90,clockwise=TRUE,lwd=3,line.col=4)
 testlen<-c(rnorm(36)*2+5)#
  testpos<-seq(0,350,by=10)#
  polar.plot(testlen,testpos,main="Test Polar Plot",lwd=3,line.col=4)#

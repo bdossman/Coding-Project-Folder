@@ -1,0 +1,652 @@
+####SIGNAL_STRENGTH_PLOTS####
+
+setwd("/Users/NorrisLab/Desktop/LPS_STUDY")
+##Note - tell R where the data is.
+
+LP_TELEMETRY <- read.csv("LONGPOINT_TELEMETRY_FINAL.csv")
+## fromat (headers): Tag	Power	Date_Time	Location	##Antenna	Starttime	Maxtime	Channel
+
+LP_TELEMETRY <- LP_TELEMETRY[order(LP_TELEMETRY$Tag, LP_TELEMETRY$Date_Time),]
+
+LP_TELEMETRY$Starttime <- as.POSIXct(strptime(as.character(LP_TELEMETRY$Starttime), format= "%Y-%m-%d %H:%M:%S", tz=""))
+
+LP_TELEMETRY$Maxtime <- as.POSIXct(strptime(as.character(LP_TELEMETRY$Maxtime), format= "%Y-%m-%d %H:%M:%S", tz=""))
+
+LP_TELEMETRY$Date_Time <- as.POSIXct(strptime(as.character(LP_TELEMETRY$Date_Time), format= "%Y-%m-%d %H:%M:%S", tz=""))
+
+old.par <- par()
+##Note - saving default global parameters
+
+####2012####
+##Note - channel 1: Tags 21-191
+
+###################################################################
+####Interactive plots####
+
+plot_tag <- function(x, y)
+{
+par(mar=c(2,6,1,3), mfrow=c(4,1), cex.axis=1.5, cex.lab=1.5, mgp=c(3.5,1,0))
+
+##Stage 1##
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="",  type='p', col=2, cex=2.5, ylab="Power (Old Cut)"))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="", ylab="", type='p', col=3, xaxt="n", yaxt="n", bty="n", cex=2.5))
+
+legend("topright", c("Northeast", "Northwest"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(2,3))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="",  type='p', col=4, cex=2.5, ylab="Power (BSC)"))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="", ylab="", type='p', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="",  type='p', col=4, cex=2.5, ylab="Power (The Farm)"))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="North"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="", ylab="", type='p', col=6, xaxt="n", yaxt="n", bty="n", cex=2.5))
+
+legend("topright", c("East", "North"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,6))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="",  type='p', col=4, cex=2.5, ylab="Power (Myle's)"))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(unique(LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x]), unique(LP_TELEMETRY$Maxtime[LP_TELEMETRY$Tag==x]) + 3*86400), xlab="", ylab="", type='p', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+####Add Reference Line####
+
+##Note - this helps you establish whether "departures" were on the same or ##different days
+
+readline(prompt="(1) Please select location on x-axis where you would like to insert reference line for departure time (press enter first, then click on plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(min(time_focus_1), origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+
+answer <- readline(prompt = "(2) Would you like to add a second reference line (y/n)? ")
+
+adjust <- function(w)
+{
+if(w=="y")
+{
+readline(prompt="(2B) Please select location on x-axis where you would like to insert reference line for departure time (press enter first, then click on plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(min(time_focus_1), origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+}
+}
+
+adjust(answer)
+
+par(new=F)
+
+#####New plot####
+
+readline(prompt="(3) Please select departure time from plot (press enter first, then click on plot once to get cross-hairs) ")
+##Note - now pick an area to zoom in on.
+date_focus_original <- unlist(locator(1)[1])
+names(date_focus_original) <- NULL
+date_focus_original <- as.POSIXct(date_focus_original, origin="1970-01-01")-18000
+x1 <- date_focus_original - 43200/3
+x2 <- date_focus_original + 10800*2
+axis_ticks <- rep((43200+10800)/5, 4)
+axis_ticks <- cumsum(axis_ticks)
+axis_ticks <- x1 + axis_ticks
+
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=2, cex=2.5, ylab="Power (Old Cut)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=3, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("Northeast", "Northwest"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(2,3))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="",  type='b', col=4, cex=2.5,  xaxt="n", ylab="Power (BSC)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1, x2), xlab="",  type='b', col=4, cex=2.5,  xaxt="n", ylab="Power (The Farm)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="North"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1, x2), xlab="", ylab="", type='b', col=6, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("East", "North"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,6))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="",  type='b', col=4, cex=2.5,  xaxt="n", ylab="Power (Myle's)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+#####New plot####
+
+readline(prompt="(4) Please select location on x-axis where you would like to insert reference line for departure time (press enter first, then click on plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(min(time_focus_1), origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+
+readline(prompt="(5) Again, please select approximate departure time from plot (press enter first, then click on plot once to get cross-hairs)) ")
+##Note - now pick an area to zoom in on.
+date_focus_1 <- unlist(locator(1)[1])
+names(date_focus_1) <- NULL
+date_focus_1 <- as.POSIXct(date_focus_1, origin="1970-01-01")-18000
+x1 <- date_focus_1 - 300
+x2 <- date_focus_1 + 1800
+axis_ticks <- rep((300+1800)/8, 7)
+axis_ticks <- cumsum(axis_ticks)
+axis_ticks <- x1 + axis_ticks
+
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=2, cex=2.5, ylab="Power (Old Cut)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=3, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("Northeast", "Northwest"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(2,3))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (BSC)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1, x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (The Farm)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="North"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1, x2), xlab="", ylab="", type='b', col=6, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "North"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,6))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n", type='b', col=4, cex=2.5, ylab="Power (Myle's)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+answer <- readline(prompt = "(6) Do you want to adjust your x axis (y/n)? ")
+
+adjust <- function(w)
+{
+if(w=="y")
+{
+a1 <- readline(prompt="(7) How many seconds would you like to adjust the x axis by (+ or - 1500 seconds is a good place to start)? ")
+a1 <- as.numeric(a1)
+x1 <- date_focus_1 - 300
+x2 <- date_focus_1 + 1800 + a1
+axis_ticks <- rep((300 + 1800 + a1)/8, 7)
+axis_ticks <- cumsum(axis_ticks)
+axis_ticks <- x1 + axis_ticks
+
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n", type='b', col=2, cex=2.5, ylab="Power (Old Cut)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=3, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("Northeast", "Northwest"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(2,3))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (BSC)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1, x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (The Farm)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="North"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1, x2), xlab="", ylab="", type='b', col=6, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "North"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,6))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (Myle's)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+readline(prompt="(8) Please select location on x-axis where you would like to insert reference line for departure time (press enter first, then click on plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(min(time_focus_1), origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+
+readline(prompt="(9) Please select departure time (press enter first, then click on plot once to get cross-hairs) " )
+date_focus_1 <- unlist(locator(1)[1])
+Departure_date_time <- as.POSIXct(date_focus_1, origin="1970-01-01")-18000
+Stopover_duration <- Departure_date_time - LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x][1] 
+
+signals <- data.frame(matrix(1:3,1))
+names(signals) <- c("Tag", "Departure_date_time", "Stopover_duration")
+signals$Tag <- x
+signals$Departure_date_time <- Departure_date_time
+units(Stopover_duration) <- "hours"
+signals$Stopover_duration <- Stopover_duration
+return(signals)
+
+}
+
+if(w=="n")
+{
+readline(prompt="(8) Please select location on x-axis where you would like to insert reference line for departure time (press enter first. then click on the plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(time_focus_1, origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+
+readline(prompt="(9) Please select departure time (press enter first, then click on plot once to get cross-hairs) " )
+date_focus_1 <- unlist(locator(1)[1])
+Departure_date_time <- as.POSIXct(date_focus_1, origin="1970-01-01")-18000
+Stopover_duration <-  Departure_date_time - LP_TELEMETRY$Starttime[LP_TELEMETRY$Tag==x][1] 
+
+signals <- data.frame(matrix(1:3,1))
+names(signals) <- c("Tag", "Departure_date_time", "Stopover_duration")
+signals$Tag <- x
+signals$Departure_date_time <- Departure_date_time
+units(Stopover_duration) <- "hours"
+signals$Stopover_duration <- Stopover_duration
+return(signals)
+
+}
+}
+
+signals <- adjust(answer)
+
+#######################################
+#######################################
+#######################################
+
+x1 <- date_focus_original - 43200/3
+x2 <- date_focus_original + 10800*2
+axis_ticks <- rep((43200 + 10800)/5, 4)
+axis_ticks <- cumsum(axis_ticks)
+axis_ticks <- x1 + axis_ticks
+
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=2, cex=2.5, ylab="Power (Old Cut)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=3, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("Northeast", "Northwest"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(2,3))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="",  type='b', col=4, cex=2.5,  xaxt="n", ylab="Power (BSC)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1, x2), xlab="",  type='b', col=4, cex=2.5,  xaxt="n", ylab="Power (The Farm)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="North"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1, x2), xlab="", ylab="", type='b', col=6, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("East", "North"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,6))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="",  type='b', col=4, cex=2.5,  xaxt="n", ylab="Power (Myle's)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+#############################################
+#############################################
+#############################################
+
+readline(prompt="(10) Please select location on x-axis where you would like to insert reference line for last point in track (press enter first, then click on plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(min(time_focus_1), origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+
+readline(prompt="(11) Please select approximate time for last point in track (press enter first, then click on plot once to get cross-hairs)) ")
+##Note - now pick an area to zoom in on.
+date_focus_1 <- unlist(locator(1)[1])
+names(date_focus_1) <- NULL
+date_focus_1 <- as.POSIXct(date_focus_1, origin="1970-01-01")-18000
+x1 <- date_focus_1 - 300
+x2 <- date_focus_1 + 1800
+axis_ticks <- rep((300+1800)/8, 7)
+axis_ticks <- cumsum(axis_ticks)
+axis_ticks <- x1 + axis_ticks
+
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=2, cex=2.5, ylab="Power (Old Cut)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=3, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("Northeast", "Northwest"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(2,3))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (BSC)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1, x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (The Farm)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="North"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1, x2), xlab="", ylab="", type='b', col=6, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "North"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,6))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n", type='b', col=4, cex=2.5, ylab="Power (Myle's)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+answer <- readline(prompt = "(12) Do you want to adjust your x axis (y/n)? ")
+
+adjust <- function(w)
+{
+if(w=="y")
+{
+a1 <- readline(prompt="(13) How many seconds would you like to adjust the x axis by (+ or - 1500 seconds is a good place to start)? ")
+a1 <- as.numeric(a1)
+x1 <- date_focus_1 - 300
+x2 <- date_focus_1 + 1800 + a1
+axis_ticks <- rep((300 + 1800 + a1)/8, 7)
+axis_ticks <- cumsum(axis_ticks)
+axis_ticks <- x1 + axis_ticks
+
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n", type='b', col=2, cex=2.5, ylab="Power (Old Cut)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="OLDCUT" & Channel==y & Antenna=="North-West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=3, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("Northeast", "Northwest"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(2,3))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (BSC)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="BSC" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1, x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (The Farm)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="FARM" & Channel==y & Antenna=="North"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1, x2), xlab="", ylab="", type='b', col=6, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "North"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,6))
+
+par(new=F)
+
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="East" & Tag==x)), plot(Date_Time, Power, ylim=c(0,270),  xlim=c(x1,x2), xlab="", xaxt="n",  type='b', col=4, cex=2.5, ylab="Power (Myle's)"))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+par(new=T)
+with(subset(LP_TELEMETRY, (Location=="MYLES" & Channel==y & Antenna=="West"  & Tag==x)), plot(Date_Time, Power, ylim=c(0,270), xlim=c(x1,x2), xlab="", ylab="", type='b', col=5, xaxt="n", yaxt="n", bty="n", cex=2.5))
+axis(1, at=axis_ticks, label=c(substr(axis_ticks[[1]], 12, 16), substr(axis_ticks[[2]], 12, 16), substr(axis_ticks[[3]], 12, 16), substr(axis_ticks[[4]], 12, 16), substr(axis_ticks[[5]], 12, 16), substr(axis_ticks[[6]], 12, 16), substr(axis_ticks[[7]], 12, 16)))
+
+legend("topright", c("East", "West"), pch = 1, title = "Antenna", cex=1.5, pt.cex=2.5, col=c(4,5))
+
+par(new=F)
+
+readline(prompt="(14) Please select location on x-axis where you would like to insert reference lines for last point in track (press enter first, then click on plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(min(time_focus_1), origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+
+readline(prompt="(15) Please select location of last point in track (press enter first, then click on plot once to get cross-hairs) " )
+date_focus_1 <- unlist(locator(1)[1])
+Last_point_track <- as.POSIXct(date_focus_1, origin="1970-01-01")-18000
+Track_duration <- Last_point_track - signals$Departure_date_time 
+
+signals_2 <- data.frame(matrix(1,1))
+names(signals_2) <- c("Track_duration")
+units(Track_duration) <- "hours"
+signals_2$Track_duration <- Track_duration
+return(signals_2)
+}
+
+if(w=="n")
+{
+readline(prompt="(13) Please select location on x-axis where you would like to insert reference lines for departure time (press enter first. then click on the plot once to get cross-hairs) ")
+time_focus_1 <- unlist(locator(1)[1])
+time_focus_1 <- as.POSIXct(time_focus_1, origin="1970-01-01")-18000
+new_usr <- par()$usr 
+par(mfg=c(1,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(2,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(3,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+par(mfg=c(4,1))
+par(usr=new_usr)
+abline(v=time_focus_1)
+
+readline(prompt="(14) Please select location of last point in track (press enter first, then click on plot once to get cross-hairs) " )
+date_focus_1 <- unlist(locator(1)[1])
+Last_point_track <- as.POSIXct(date_focus_1, origin="1970-01-01")-18000
+Track_duration <- Last_point_track - signals$Departure_date_time
+
+signals_2 <- data.frame(matrix(1,1))
+names(signals_2) <- c("Track_duration")
+units(Track_duration) <- "hours"
+signals_2$Track_duration <- Track_duration
+return(signals_2)
+
+
+}
+}
+
+signals2 <- adjust(answer)
+signals <- cbind(signals, signals2)
+
+as.factor(Last_antenna <- readline(prompt="(12) Please enter last tower and antenna to receive signal (e.g., BSC West): "))
+
+Departure_known <- as.factor(readline(prompt="(13) Have you measured the exact departure time, i.e., do you know the approximate location an individual originally departed from (y/n)? "))
+
+signals$Last_antenna <- Last_antenna
+signals$Departure_location_known <- Departure_known
+return(signals)
+#signals <- print(signals)
+
+
+}
+
+
+######################################
+######################################
+######################################
+
+##signals <- plot_tag(XX, XX)
+
+departure <- NULL
+departure <- rbind(departure, signals)
+ 
+
+
